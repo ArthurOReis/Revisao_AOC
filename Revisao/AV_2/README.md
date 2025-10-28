@@ -210,3 +210,84 @@ inc r0
 std Y+3, r0   ; Y continua sendo 0x0100. Agora com + 3,
               ; a operação acontece no endereço 0x0103
 ```
+
+---
+
+# 4. Pilha, Ponteiro da Pilha e Sub-rotinas
+
+## 4.2 Pilha e Ponteiro da Pilha
+
+### Pilha:
+- Utiliza parte da SRAM
+- Armazena temporariamente dados de variáveis locais e retorno de sub-rotinas/interrupções.
+### Ponteiro de Pilha ou Stack Pointer (SP):
+- Pós-decrementado quando um dado é adicionado na pilha.
+- Pré-incrementado quando um dado é retirado da pilha
+- SP deve ser inicializado para o último endereço da RAM
+- O ATmega328 o endereço é 0x8FF e já é carregado durante o reset.
+- Alguns MCUs da família ATmega precisam ter o SP inicializado pelo programador.
+
+| Instrução | SP | Descrição |
+|-----------|-------|------------|
+| PUSH | Decrementa em 1 | O dado é colocado na pilha (1 byte). |
+| CALL<br>ICALL<br>RCALL | Decrementa em 2 | O endereço de retorno é colocado na pilha quando uma chamada de sub-rotina ou interrupção acontece (o endereço possui 2 bytes). |
+| POP | Incrementa em 1 | O dado do topo da pilha é retirado (1 byte). |
+| RET<br>RETI | Incrementa em 2 | O endereço de retorno é retirado da pilha quando se retorna de uma sub-rotina ou interrupção (o endereço possui 2 bytes). |
+
+Exemplo: Armazenando de dados na Pilha
+`push`, `pop`
+
+```asm
+    ldi r16,0x01 ; carrega r16 com 0x01
+    ldi r17,0x02 ; carrega r17 com 0x02
+
+    push r16 ; salva r16 na pilha
+    push r17 ; salva r17 na pilha
+
+    pop r17 ; restaura r17 da pilha
+    pop r16 ; restaura r16 da pilha
+```
+
+## 4.3 Sub-rotina
+
+- O mecanismo de sub-rotina permite:
+1. Organizar o código em bloco modulares, inclusive bibliotecas
+2. Continuar a execução de onde foi chamada sem rótulos de forma “automática”
+3. Reutilização de código
+Exemplo:
+
+```asm
+main:
+    rcall sub_rotina
+    rjmp main
+
+sub_rotina:
+    ;executa sub-rotina
+    ret
+```
+
+### Rótulo:
+- Utilizado para identificar um ponto na memória de programa
+- Deve ser utilizado com instruções de desvio condicional e incondicional
+- Não tem mecanismo de retorno
+
+```asm
+rótulo:
+    ; trecho de programa a ser executado a partir do Rótulo
+    ; continua sequencialmente até encontrar outro desvio
+```
+
+### Sub-rotina:
+`- Começa com um rótulo e termina com um `ret`
+- Deve ser chamado com `rcall`, `icall` e `call`
+- Retorna de onde foi chamada
+- Utiliza a pilha para armazenar o endereço de retorno
+
+```asm
+sub_rotina:
+    ; pode saltar para rótulos quantas vezes quiser
+    ; pode executar outras sub-rotinas (rcall, icall e call)
+    ; desde que a última instrução seja ret
+
+    ret
+```
