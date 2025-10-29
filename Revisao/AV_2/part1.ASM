@@ -1,3 +1,38 @@
+; init_32bits
+
+; Inicializa uma variável de 32 bits apontada por X com os valores passados em R16, R17, R18 e R19
+
+; Parâmetros:
+
+; R16, R17, R18, R19 : Valor que deve ser utilizado na inicialização. Sendo o R16 o byte menos significativo e o R19 o mais.
+
+; Registrador X:Ponteiro para a posição inicial da variável. Considere o byte menos significativo armazenado no menor endereço.
+
+; zera_32bits
+
+; Inicializa uma variável de 32 bits com zero.
+
+; Parâmetros:
+
+; Registrador X : Ponteiro para a posição inicial da variável.
+; sub_32bits
+
+; Subtraia duas variáveis de 32 bits e guarde em uma terceira variável.
+
+; Parâmetros:
+
+; Registrador X : Ponteiro para a posição inicial da primeira variável.
+
+; Registrador Y : Ponteiro para a posição inicial da segunda variável, a qual será subtraída da primeira.
+
+; Registrador Z : Ponteiro para a posição inicial da terceira variável.
+
+; Observações:
+
+; Salve o contexto adequadamente.
+
+; Utilize modos de endereçamento adequados para cada caso e laços de repetição, se for o caso.
+
 .DSEG
 .ORG SRAM_START
     VAR1: .BYTE 4

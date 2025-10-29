@@ -3,7 +3,7 @@
 ;
 ; Tarefas:
 ; 1. Declare na memória SRAM:
-;    - Um vetor 'numeros' com 4 bytes iniciando em 0x100
+;    - Um vetor 'numeros' com 4 bytes
 ;
 ; 2. Usando Endereçamento Direto:
 ;    - Use LDS para carregar valor 5 em R16
@@ -40,11 +40,45 @@
 ;   * ST -X, Rr   - Decrementa X e guarda
 
 .DSEG
-.ORG 0x100              ; Começamos em 0x100 na SRAM
+.ORG SRAM_START         ; Começamos em SRAM_START na SRAM
     numeros: .BYTE 4    ; Reserva 4 bytes
 
 .CSEG                   ; Segmento de código começa aqui
 
 start:
-    ; Seu código aqui
-    ; Boa sorte!
+    ; 2. Endereçamento Direto usando LDS/STS
+    LDI R16, 5              ; Carrega valor inicial
+    STS numeros, R16        ; Guarda diretamente em numeros[0]
+    LDS R17, numeros        ; Lê diretamente de numeros[0]
+
+    ; 3. Endereçamento Indireto com deslocamento (LDD/STD)
+    LDI YH, HIGH(numeros)   ; Configura base Y
+    LDI YL, LOW(numeros)
+    LDI R16, 2             ; Novo valor para numeros[1]
+    STD Y+1, R16           ; Guarda em Y+1 (numeros[1])
+    LDD R17, Y+1           ; Lê de Y+1 (numeros[1])
+
+    ; 4. Endereçamento Indireto com Pós-Incremento (com Y)
+    LDI YL, LOW(numeros)    ; Configura Y para apontar para numeros[0]
+    LDI YH, HIGH(numeros)
+    LDI R16, 1             ; Valor inicial = 1
+    LDI R17, 3             ; Contador = 3 iterações
+
+loop_store:
+    ST Y+, R16            ; Guarda R16 em [Y] e incrementa Y
+    INC R16               ; Incrementa o valor a ser guardado
+    DEC R17               ; Decrementa o contador
+    BRNE loop_store      ; Se contador não é zero, continua loop
+
+    ; 5. Endereçamento Indireto com pré-decremento (LD/ST com -)
+    LDI XH, HIGH(numeros+4) ; Configura X para fim do vetor + 1
+    LDI XL, LOW(numeros+4)
+    LD R16, -X             ; Lê último valor (pré-decremento)
+    LD R17, -X             ; Lê penúltimo valor (pré-decremento)
+
+    ; Exemplo adicional: Leitura/Escrita direta em endereços específicos
+    STS numeros+3, R16     ; Escreve diretamente em numeros[3]
+    LDS R18, numeros+2     ; Lê diretamente de numeros[2]
+
+fim:
+    RJMP start           ; Loop infinito

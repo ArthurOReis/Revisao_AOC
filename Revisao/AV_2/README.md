@@ -130,7 +130,7 @@ Faça um programa que some dois números de 8 bits armazenados em registradores 
 
 # SRAM
 
-## 1. Objetivos
+## 4. Objetivos
 
 - Entender os modos de endereçamento da SRAM (Direto, Indireto, Indireto com pós-incremento, pré-decremento e deslocamento)
 - Entender as instruções `lds`, `sts`, `ld`, `st`, `ldd` e `std`
@@ -138,9 +138,9 @@ Faça um programa que some dois números de 8 bits armazenados em registradores 
 - Diretivas `.BYTE`, `.ORG`, `.DSEG`
 - Operadores (+, −) e funções (`LOW()` e `HIGH()`)
 
-## 1.2 Modos de Endereçamento: Memória de Dados
+## 4.2 Modos de Endereçamento: Memória de Dados
 
-## 1.2.1 Direto
+## 4.2.2 Direto
 
 - O conteúdo de uma posição da memória de dados é acessada usando seu endereço (direto).
 
@@ -151,7 +151,7 @@ lds R0, 0x0100
 sts 0x0101, R0
 ```
 
-## 1.2.2 Indireto
+## 4.2.3 Indireto
 
 - O conteúdo de uma posição da memória de dados é acessada usando os ponteiros X, Y ou Z.
 
@@ -160,12 +160,12 @@ Exemplo:
 ```asm
 ldi r27, 0x01 ; Byte mais significativo de X (XH)
 ldi r26, 0x00 ; Byte menos significativo de X (XL)
-ld r0, X      ; X est´a apontando o endere¸co 0x0100
+ld r0, X      ; X está apontando o endereço 0x0100
 inc r0
 st X, r0
 ```
 
-## 1.2.3 Indireto com Pós-Incremento
+## 4.2.4 Indireto com Pós-Incremento
 
 - O conteúdo de uma posição da memória de dados é acessada usando os ponteiros X, Y ou Z, e o ponteiro é incrementado após o acesso.
 
@@ -180,7 +180,7 @@ st X+, r0
 rjmp loop
 ```
 
-## 1.2.4 Indireto com Pré-Drecremento
+## 4.2.5 Indireto com Pré-Drecremento
 
 - O ponteiro X, Y ou Z é decrementado e depois é usado para acessar o conteúdo de uma posição da memória de dados.
 
@@ -195,7 +195,7 @@ st -X, r0
 rjmp loop
 ```
 
-## 1.2.5 Indireto com Deslocamento
+## 4.2.6 Indireto com Deslocamento
 
 - O endereço do operando é o resultado do conteúdo do registro Y ou Z adicionado ao valor contido em seis bits da palavra de instrução. O ponteiro não sofre alteração.
 
@@ -213,9 +213,9 @@ std Y+3, r0   ; Y continua sendo 0x0100. Agora com + 3,
 
 ---
 
-# 4. Pilha, Ponteiro da Pilha e Sub-rotinas
+# 5. Pilha, Ponteiro da Pilha e Sub-rotinas
 
-## 4.2 Pilha e Ponteiro da Pilha
+## 5.2 Pilha e Ponteiro da Pilha
 
 ### Pilha:
 - Utiliza parte da SRAM
@@ -248,7 +248,7 @@ Exemplo: Armazenando de dados na Pilha
     pop r16 ; restaura r16 da pilha
 ```
 
-## 4.3 Sub-rotina
+## 5.3 Sub-rotina
 
 - O mecanismo de sub-rotina permite:
 1. Organizar o código em bloco modulares, inclusive bibliotecas
